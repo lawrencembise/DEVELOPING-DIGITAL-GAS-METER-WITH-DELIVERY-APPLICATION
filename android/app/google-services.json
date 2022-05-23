@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "420516007171",
+    "project_id": "mtungi-chap-chap",
+    "storage_bucket": "mtungi-chap-chap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420516007171:android:fa82a718c3f19a40ccad36",
+        "android_client_info": {
+          "package_name": "com.lawrencembise.mtungichapchap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "420516007171-3eeivp0rp9sdektjf0jin9gckpck9eqk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvsQG0KrXxL8KmAmWkwjfDtAGUV2qqaTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420516007171-3eeivp0rp9sdektjf0jin9gckpck9eqk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
