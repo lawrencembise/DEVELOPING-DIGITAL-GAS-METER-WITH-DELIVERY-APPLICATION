@@ -146,36 +146,36 @@ class _SignInScreenState extends State<SignInScreen> {
                         padding: const EdgeInsets.all(10.0),
                         child: GestureDetector(
                           onTap: () {
+                            print("Clicked");
+
                             dbRef
                                 .reference()
                                 .orderByChild("mobile")
                                 .equalTo(phoneTextEditingController.text)
                                 .get()
                                 .then((value) {
+
+                              print("${value.value}");
+
                               if (value.value == null) {
-                                Get.snackbar("Error", "No user found ${phoneTextEditingController.text}");
+                                Get.snackbar("Error",
+                                    "No user found ${phoneTextEditingController.text}");
                                 return;
                               }
                               Map data = value.value;
                               data.forEach((key, value) {
-                                if (passwordTextEditingController.text ==
-                                        value['password'] &&
-                                    ("+255" + phoneTextEditingController.text ==
-                                        value['mobile'])) {
-
-                                  userdata?.write("uid",value["uid"]);
-                                  userdata?.write("phone",value["mobile"]);
+                                if (passwordTextEditingController.text ==  value['password'] && ("+255" + phoneTextEditingController.text == value['mobile'])) {
+                                  userdata?.write("uid", value["uid"]);
+                                  userdata?.write("phone", value["mobile"]);
 
                                   print("User Exist");
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomeScreen()),
+                                          builder: (context) => HomeScreen()),
                                       (route) => false);
                                 } else {
                                   Get.snackbar("Error", "Wrong Credentials");
-
                                 }
                               });
                             });

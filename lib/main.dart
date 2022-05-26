@@ -24,14 +24,13 @@ void main() async  {
           builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
             if (snapshot.hasData) {
               return HomeScreen();
-              // return MyApp();
             }
             return SignInScreen();
           },
-        ),
+        // ),
       ),
     ),
-  );
+  ));
 }
 
 DatabaseReference dbRef = FirebaseDatabase.instance.reference().child("users");

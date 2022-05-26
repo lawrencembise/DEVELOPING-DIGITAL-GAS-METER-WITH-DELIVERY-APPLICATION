@@ -112,6 +112,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                 verificationId: _verificationCode, smsCode: v))
                             .then((value) async {
                           if (value.user != null) {
+
                             print("pass to home");
                             userdata?.write("uid", value.user!.uid);
                             userdata?.write("phone", value.user!.phoneNumber);

@@ -374,6 +374,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Map userDetails = {
                     "password": passwordTextEditingController.text,
                     "name": firstNameTextEditingController.text,
+                    "phone": userdata?.read("phone"),
+                    "leakage": 0,
+                    "level": 0
                   };
 
                   dbRef.child(userdata?.read("uid")).set(userDetails).then((value) {
