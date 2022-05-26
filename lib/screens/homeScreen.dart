@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mtungi_chap_chap/constants.dart';
 import 'package:mtungi_chap_chap/screens/sidebarScreen.dart';
-import 'package:mtungi_chap_chap/widgets/days_left.dart';
-import 'package:mtungi_chap_chap/widgets/gas_level.dart';
-import 'package:mtungi_chap_chap/widgets/leakage_level.dart';
+import 'package:mtungi_chap_chap/widgets/myDashboard.dart';
 import 'package:mtungi_chap_chap/widgets/statsWidget.dart';
+import 'package:mtungi_chap_chap/main.dart';
 import '../global/userdata.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,10 +17,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  String user = userdata?.read("uid");
+
   late Animation<Offset> sidebarAnimation;
   late Animation<double> fadeAnimation;
   late AnimationController sidebarAnimationController;
   Timer? timer;
+
+  bool isLoading = false;
+
+  late AnimationController progressController;
+  late Animation<double> tempAnimation;
+  late Animation<double> humidityAnimation;
+
 
   var sidebarHidden = true;
   String newvalue = "x";
@@ -45,8 +54,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
       ),
     );
-    // timer = Timer.periodic(Duration(seconds: 15),(Timer t) => checkForNewValue());
+    dbRef.child('${user}').once().then((DataSnapshot snapshot) {
+      double temp = snapshot.value['level'];
+      double humidity = snapshot.value['leakage'];
+
+      isLoading = true;
+      _DashboardInit(temp, humidity);
+    });  }
+
+  _DashboardInit(double temp, double humid) {
+    progressController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 5000)); //5s
+
+    tempAnimation =
+    Tween<double>(begin: 0, end: temp).animate(progressController)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    humidityAnimation =
+    Tween<double>(begin: 0, end: humid).animate(progressController)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    progressController.forward();
   }
+
 
   @override
   void dispose() {
@@ -58,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Stack(
+        body: isLoading ? Stack(
           children: [
             Padding(
               padding: const EdgeInsets.all(20),
@@ -92,19 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     height: 2.5,
                   ),
                   Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: GasLevel(),
-                        ),
-                        Expanded(
-                          child: LeakageLevel(),
-                        ),
-                        Expanded(
-                          child: DaysLeft(),
-                        ),
-                      ],
-                    ),
+                    child:  MyDashboard(isLoading: isLoading, tempAnimation: tempAnimation, humidityAnimation: humidityAnimation),
                   ),
                   StatsWidget(),
                   const SizedBox(
@@ -156,9 +178,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ],
-        ),
-      ),
-    );
+        ): Center(
+          child: Text(
+            'Loading...',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ))
+      );
+
   }
 
   // checkForNewValue() {

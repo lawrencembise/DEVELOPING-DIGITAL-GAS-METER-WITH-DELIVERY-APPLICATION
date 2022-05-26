@@ -50,6 +50,7 @@ dependencies:
   path: ^1.8.0
   get: ^4.6.1
   flutter_map: ^0.14.0
+  rflutter_alert: ^2.0.4
 
 
 dev_dependencies:

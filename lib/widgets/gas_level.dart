@@ -1,73 +1,104 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mtungi_chap_chap/constants.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import '../global/userdata.dart';
+import '../main.dart';
 
-class GasLevel extends StatelessWidget {
+class GasLevel extends StatefulWidget {
+  @override
+  State<GasLevel> createState() => _GasLevelState();
+}
+
+class _GasLevelState extends State<GasLevel> {
+  String user = userdata?.read("uid");
+
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    dbRef
+        .child('${user}')
+        .once()
+        .then((DataSnapshot snapshot) {
+      double level = snapshot.value['level'];
+      isLoading = true;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Material(child: Scaffold(
-      body: SfRadialGauge(
-        title: GaugeTitle(text: "Gas Level",
-        textStyle: normalOnes),
-        enableLoadingAnimation: false,
-        key: UniqueKey() ,
-        animationDuration: 2500,
-        axes: <RadialAxis>[
-          RadialAxis(
-
-              labelOffset: 15,
-              axisLineStyle: const AxisLineStyle(
-                  thicknessUnit: GaugeSizeUnit.factor, thickness: 0.15),
-              radiusFactor:  0.9,
-              minimum: 0,
-              showTicks: false,
-              maximum: 150,
-              axisLabelStyle: const GaugeTextStyle(fontSize: 12),
-              // Added custom axis renderer that extended from RadialAxisRenderer
-              onCreateAxisRenderer: handleCreateAxisRenderer,
-              pointers: <GaugePointer>[
-                const NeedlePointer(
-                    enableAnimation: true,
-                    gradient:  LinearGradient(colors: <Color>[
-                      Color.fromRGBO(203, 126, 223, 0),
-                      Color(0xFF4048BF)
-                    ], stops: <double>[
-                      0.25,
-                      0.75
-                    ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-                    animationType: AnimationType.easeOutBack,
-                    value: 60,
-                    lengthUnit: GaugeSizeUnit.factor,
-                    animationDuration: 1300,
-                    needleStartWidth:  1,
-                    needleEndWidth:  4,
-                    needleLength: 0.8,
-                    knobStyle:  KnobStyle(
-                      knobRadius: 0,
-                    )),
-                RangePointer(
-                    value: 60,
-                    width: 0.15,
-                    sizeUnit: GaugeSizeUnit.factor,
-                    color: themeColor,
-                    animationDuration: 1300,
-                    animationType: AnimationType.easeOutBack,
-                    gradient: const SweepGradient(
-                        colors: <Color>[ Color(0xFF4048BF), Color(0xFF58BE3F)],
-                        stops: <double>[0.25, 0.75]),
-                    enableAnimation: true)
-              ])
-        ],
+    return Material(
+      child: Scaffold(
+        body: SfRadialGauge(
+          title: GaugeTitle(text: "Gas Level", textStyle: normalOnes),
+          enableLoadingAnimation: false,
+          key: UniqueKey(),
+          animationDuration: 2500,
+          axes: <RadialAxis>[
+            RadialAxis(
+                labelOffset: 15,
+                axisLineStyle: const AxisLineStyle(
+                    thicknessUnit: GaugeSizeUnit.factor, thickness: 0.15),
+                radiusFactor: 0.9,
+                minimum: 0,
+                showTicks: false,
+                maximum: 150,
+                axisLabelStyle: const GaugeTextStyle(fontSize: 12),
+                // Added custom axis renderer that extended from RadialAxisRenderer
+                onCreateAxisRenderer: handleCreateAxisRenderer,
+                pointers: <GaugePointer>[
+                   NeedlePointer(
+                      enableAnimation: true,
+                      gradient: LinearGradient(
+                          colors: <Color>[
+                            Color.fromRGBO(203, 126, 223, 0),
+                            Color(0xFF4048BF)
+                          ],
+                          stops: <double>[
+                            0.25,
+                            0.75
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter),
+                      animationType: AnimationType.easeOutBack,
+                      value: isLoading ? 0:10,
+                      lengthUnit: GaugeSizeUnit.factor,
+                      animationDuration: 1300,
+                      needleStartWidth: 1,
+                      needleEndWidth: 4,
+                      needleLength: 0.8,
+                      knobStyle: KnobStyle(
+                        knobRadius: 0,
+                      )),
+                  RangePointer(
+                      value: isLoading ? 0: 10,
+                      width: 0.15,
+                      sizeUnit: GaugeSizeUnit.factor,
+                      color: themeColor,
+                      animationDuration: 1300,
+                      animationType: AnimationType.easeOutBack,
+                      gradient: const SweepGradient(
+                          colors: <Color>[Color(0xFF4048BF), Color(0xFF58BE3F)],
+                          stops: <double>[0.25, 0.75]),
+                      enableAnimation: true)
+                ])
+          ],
+        ),
       ),
-    ),
     );
   }
 }
+
 GaugeAxisRenderer handleCreateAxisRenderer() {
   final _CustomAxisRenderer _customAxisRenderer = _CustomAxisRenderer();
   return _customAxisRenderer;
 }
-
 
 class _CustomAxisRenderer extends RadialAxisRenderer {
   _CustomAxisRenderer() : super();
@@ -137,5 +168,19 @@ class _CustomAxisRenderer extends RadialAxisRenderer {
     } else {
       return 100;
     }
+  }
+}
+
+Future<double> updateData () async {
+  String userId = userdata?.read("uid");
+
+  final ref = FirebaseDatabase.instance.reference();
+  final snapshot = await ref.child('users/$userId/level').get();
+  if (snapshot.exists) {
+    print(snapshot.value);
+    return snapshot.value;
+  } else {
+    print("noooooooo");
+    return 0.0;
   }
 }
