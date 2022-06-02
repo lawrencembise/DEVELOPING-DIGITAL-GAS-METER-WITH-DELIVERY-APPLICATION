@@ -76,8 +76,7 @@ class Sidebar extends StatelessWidget {
             onTap: () async{
 
               await FirebaseAuth.instance.signOut();
-              userdata?.remove("uid");
-              userdata?.remove("phone");
+              userdata?.remove;
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> SignInScreen()),
                   (route) =>false);
             },

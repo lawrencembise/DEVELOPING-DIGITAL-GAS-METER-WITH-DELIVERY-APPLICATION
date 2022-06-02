@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mtungi_chap_chap">
-   <application
+    <!-- Add this permission -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
         android:label="mtungi_chap_chap"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
@@ -30,5 +33,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+       <meta-data
+           android:name="com.google.android.maps.v2.API_KEY"
+           android:value="AIzaSyBqgKeVUUvD7BNuJbDeA8jnYzamTxnGAKM"/>
     </application>
 </manifest>
