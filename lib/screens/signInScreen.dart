@@ -150,7 +150,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                             dbRef
                                 .reference()
-                                .orderByChild("mobile")
+                                .orderByChild("phone")
                                 .equalTo(phoneTextEditingController.text)
                                 .get()
                                 .then((value) {
@@ -164,11 +164,12 @@ class _SignInScreenState extends State<SignInScreen> {
                               }
                               Map data = value.value;
                               data.forEach((key, value) {
-                                if (passwordTextEditingController.text ==  value['password'] && ("+255" + phoneTextEditingController.text == value['mobile'])) {
-                                  userdata?.write("uid", value["uid"]);
-                                  userdata?.write("phone", value["mobile"]);
+                                if (passwordTextEditingController.text ==  value['password'] && ("+255" + phoneTextEditingController.text == value['phone'])) {
 
-                                  print("User Exist");
+                                  userdata?.write("uid", key);
+                                  userdata?.write("phone", value["phone"]);
+
+                                  print("User Exist ${value["phone"]}");
                                   Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(

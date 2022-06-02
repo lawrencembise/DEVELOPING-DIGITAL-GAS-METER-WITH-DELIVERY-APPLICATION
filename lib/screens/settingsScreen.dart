@@ -6,8 +6,10 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:mtungi_chap_chap/constants.dart';
 import 'package:mtungi_chap_chap/screens/homeScreen.dart';
 import 'package:mtungi_chap_chap/widgets/toggleButton.dart';
+import 'package:place_picker/widgets/place_picker.dart';
 
 
+import '../.env.dart';
 import '../main.dart';
 import '../global/userdata.dart';
 import 'ChatPage.dart';
@@ -280,84 +282,124 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(
                 height: 20,
               ),
-              SwitchListTile(
-                title: Text('Enable Bluetooth', style: normalOnes),
-                activeColor: themeColor,
-                value: _bluetoothState.isEnabled,
-                onChanged: (bool value) {
-                  // Do the request and update with the true value then
-                  future() async {
-                    // async lambda seems to not working
-                    if (value) {
-                      await FlutterBluetoothSerial.instance.requestEnable();
-                    } else {
-                      await FlutterBluetoothSerial.instance.requestDisable();
-                    }
-                  }
-
-                  future().then((_) {
-                    setState(() {});
-                  });
-                },
-              ),
-              ListTile(
-                title: Text(
-                  'Bluetooth status',
-                  style: normalOnes,
-                ),
-                subtitle: Text(
-                  _bluetoothState.toString(),
-                  style: tinyOnes,
-                ),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  final BluetoothDevice? selectedDevice =
-                      await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return SelectBondedDevicePage(checkAvailability: false);
-                      },
-                    ),
-                  );
-
-                  if (selectedDevice != null) {
-                    print('Connect -> selected ' + selectedDevice.address);
-                    _startChat(context, selectedDevice);
-                  } else {
-                    print('Connect -> no device selected');
-                  }
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                  child: Container(
-                    width: double.infinity,
-                    height: 55,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 35, right: 35),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Connect to paired device to chat",
-                            style: buttonTextOnes,
-                          ),
-                        ],
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        color: themeColor,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              color: myGrey,
-                              offset: const Offset(0, 10),
-                              blurRadius: 15.0)
-                        ]),
+              // SwitchListTile(
+              //   title: Text('Enable Bluetooth', style: normalOnes),
+              //   activeColor: themeColor,
+              //   value: _bluetoothState.isEnabled,
+              //   onChanged: (bool value) {
+              //     // Do the request and update with the true value then
+              //     future() async {
+              //       // async lambda seems to not working
+              //       if (value) {
+              //         await FlutterBluetoothSerial.instance.requestEnable();
+              //       } else {
+              //         await FlutterBluetoothSerial.instance.requestDisable();
+              //       }
+              //     }
+              //
+              //     future().then((_) {
+              //       setState(() {});
+              //     });
+              //   },
+              // ),
+              // ListTile(
+              //   title: Text(
+              //     'Bluetooth status',
+              //     style: normalOnes,
+              //   ),
+              //   subtitle: Text(
+              //     _bluetoothState.toString(),
+              //     style: tinyOnes,
+              //   ),
+              // ),
+              // GestureDetector(
+              //   onTap: () async {
+              //     final BluetoothDevice? selectedDevice =
+              //         await Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //         builder: (context) {
+              //           return SelectBondedDevicePage(checkAvailability: false);
+              //         },
+              //       ),
+              //     );
+              //
+              //     if (selectedDevice != null) {
+              //       print('Connect -> selected ' + selectedDevice.address);
+              //       _startChat(context, selectedDevice);
+              //     } else {
+              //       print('Connect -> no device selected');
+              //     }
+              //   },
+              //   child: Padding(
+              //     padding:
+              //         const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              //     child: Container(
+              //       width: double.infinity,
+              //       height: 55,
+              //       child: Padding(
+              //         padding: const EdgeInsets.only(left: 35, right: 35),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Text(
+              //               "Connect to paired device to chat",
+              //               style: buttonTextOnes,
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       decoration: BoxDecoration(
+              //           color: themeColor,
+              //           borderRadius: BorderRadius.circular(12),
+              //           boxShadow: [
+              //             BoxShadow(
+              //                 color: myGrey,
+              //                 offset: const Offset(0, 10),
+              //                 blurRadius: 15.0)
+              //           ]),
+              //     ),
+              //   ),
+              // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) =>
+                        PlacePicker(MyAPI_key),
                   ),
+                );
+              },
+              child: Padding(
+                padding:
+                const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                child: Container(
+                  width: double.infinity,
+                  height: 55,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 35, right: 35),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Delivery Location",
+                          style: buttonTextOnes,
+                        ),
+                      ],
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      color: themeColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                            color: myGrey,
+                            offset: const Offset(0, 10),
+                            blurRadius: 15.0)
+                      ]),
                 ),
               ),
+            ),
               GestureDetector(
                 onTap: () {
                   if (firstNameTextEditingController.text.length <= 4) {
@@ -375,8 +417,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     "password": passwordTextEditingController.text,
                     "name": firstNameTextEditingController.text,
                     "phone": userdata?.read("phone"),
-                    "leakage": 0,
-                    "level": 0
+                    "leakage": 0.01,
+                    "level": 0.01
                   };
 
                   dbRef.child(userdata?.read("uid")).set(userDetails).then((value) {

@@ -51,6 +51,10 @@ dependencies:
   get: ^4.6.1
   flutter_map: ^0.14.0
   rflutter_alert: ^2.0.4
+  location: ^4.2.0
+  google_maps_flutter: ^2.0.0
+  place_picker: ^0.9.19
+  http: ^0.13.0
 
 
 dev_dependencies:

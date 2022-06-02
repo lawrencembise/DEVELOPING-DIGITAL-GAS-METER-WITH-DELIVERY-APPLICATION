@@ -1,8 +1,11 @@
 // ignore: file_names
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mtungi_chap_chap/constants.dart';
 import 'package:mtungi_chap_chap/widgets/barChartBar.dart';
+import '../main.dart';
+
 
 final DateTime now = DateTime.now();
 final DateTime nextWeek = DateTime.now().add(const Duration(days: 7));
@@ -10,6 +13,7 @@ final DateFormat formatter = DateFormat('E,dd MMM yy');
 final DateFormat formatter2 = DateFormat('dd MMM yy');
 final String formatted = formatter.format(now);
 final String formatted2 = formatter2.format(nextWeek);
+final DateFormat dayOfWeek = DateFormat('E');
 
 class WeeklyGraphWidget extends StatefulWidget {
   const WeeklyGraphWidget({Key? key}) : super(key: key);
@@ -21,6 +25,16 @@ class WeeklyGraphWidget extends StatefulWidget {
 class _WeeklyGraphWidgetState extends State<WeeklyGraphWidget> {
   String weekGroup = "groupValue";
   int height = 0;
+
+  Map weekData ={
+    "Mon": 1.2,
+    "Tue": 1.0,
+    "Wen": 0.0,
+    "Thu": 2.0,
+    "Fri": 1.1,
+    "Sat": 1.2,
+    "Sun": 1.6
+  };
 
   @override
   Widget build(BuildContext context) {

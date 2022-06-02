@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,15 @@ import 'package:mtungi_chap_chap/screens/sidebarScreen.dart';
 import 'package:mtungi_chap_chap/widgets/myDashboard.dart';
 import 'package:mtungi_chap_chap/widgets/statsWidget.dart';
 import 'package:mtungi_chap_chap/main.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/place_picker.dart';
 import '../global/userdata.dart';
+import 'package:mtungi_chap_chap/.env.dart';
+
+import 'order_Screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
 
@@ -54,13 +61,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
       ),
     );
-    dbRef.child('${user}').once().then((DataSnapshot snapshot) {
+
+    //BELOW CODES ARE FOR THE VALUES THAT CHANGES EVERY TIME THAT THE DATABASE VALUES CHANGES
+    dbRef
+        .child('${user}')
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
+
       double temp = snapshot.value['level'];
       double humidity = snapshot.value['leakage'];
 
       isLoading = true;
       _DashboardInit(temp, humidity);
-    });  }
+
+    });
+
+    //BELOW CODES ARE USED FOR RETRIEVING VALUES OF THE CURRENT STATE AND DO NOT CHANGE WHEN DATA CHANGES  IN THE DATABASE
+    // dbRef.child('${user}').once().then((DataSnapshot snapshot) {
+    //   double temp = snapshot.value['level'];
+    //   double humidity = snapshot.value['leakage'];
+    //
+    //   isLoading = true;
+    //   _DashboardInit(temp, humidity);
+    // });
+  }
 
   _DashboardInit(double temp, double humid) {
     progressController = AnimationController(
@@ -132,19 +156,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   const SizedBox(
                     height: 46,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "ORDER GAS",
-                        style: buttonTextOnes,
-                      ),
-                      height: 40,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: themeColor,
-                        borderRadius: BorderRadius.circular(20),
+                  GestureDetector(
+                    onTap:() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (c) =>
+                          OrderScreen(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "ORDER GAS",
+                          style: buttonTextOnes,
+                        ),
+                        height: 40,
+                        width: 300,
+                        decoration: BoxDecoration(
+                          color: themeColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
                   ),
