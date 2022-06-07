@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mtungi_chap_chap/constants.dart';
 import 'package:mtungi_chap_chap/widgets/barChartBar.dart';
+import '../global/userdata.dart';
 import '../main.dart';
 
 
@@ -25,16 +26,41 @@ class WeeklyGraphWidget extends StatefulWidget {
 class _WeeklyGraphWidgetState extends State<WeeklyGraphWidget> {
   String weekGroup = "groupValue";
   int height = 0;
+  String user = userdata?.read("uid");
+  double sum = 14;
+  double average = 10;
 
-  Map weekData ={
-    "Mon": 1.2,
-    "Tue": 1.0,
-    "Wen": 0.0,
-    "Thu": 2.0,
-    "Fri": 1.1,
-    "Sat": 1.2,
-    "Sun": 1.6
-  };
+
+
+  @override
+  void initState() {
+    dbRef
+        .child('${user}')
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
+
+      Map weekData ={
+        "Mon": snapshot.value['week']['mon'],
+        "Tue": snapshot.value['week']['tue'],
+        "Wen": snapshot.value['week']['wen'],
+        "Thu": snapshot.value['week']['thu'],
+        "Fri": snapshot.value['week']['fri'],
+        "Sat": snapshot.value['week']['sat'],
+        "Sun": snapshot.value['week']['sun']
+      };
+
+      weekCalculation(weekData);
+
+    });
+    super.initState();
+  }
+
+  weekCalculation(Map weekData){
+    weekData.forEach((key, value) {
+      sum += value;
+    });
+    average = sum/7;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +81,7 @@ class _WeeklyGraphWidgetState extends State<WeeklyGraphWidget> {
                 height: 33,
                 alignment: Alignment.topRight,
                 child: Text(
-                  "Kgs",
+                  "kg",
                   style: aliens,
                 )),
             Text(

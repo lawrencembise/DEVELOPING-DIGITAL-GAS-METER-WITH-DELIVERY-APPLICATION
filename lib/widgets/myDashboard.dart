@@ -9,11 +9,13 @@ class MyDashboard extends StatelessWidget {
     required this.isLoading,
     required this.tempAnimation,
     required this.humidityAnimation,
+    required this.daysLeftAnimation,
   }) : super(key: key);
 
   final bool isLoading;
   final Animation<double> tempAnimation;
   final Animation<double> humidityAnimation;
+  final Animation<double> daysLeftAnimation;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class MyDashboard extends StatelessWidget {
             Expanded(
               child: CustomPaint(
                 foregroundPainter:
-                CircleProgress(humidityAnimation.value, false),
+                CircleProgress(daysLeftAnimation.value, false),
                 child: Container(
                   width: 200,
                   height: 200,
@@ -95,7 +97,7 @@ class MyDashboard extends StatelessWidget {
                       children: <Widget>[
                         Text('Days left',style: aliens,),
                         Text(
-                          '${humidityAnimation.value.toInt()}',
+                          '${daysLeftAnimation.value.toInt()}',
                           style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold),

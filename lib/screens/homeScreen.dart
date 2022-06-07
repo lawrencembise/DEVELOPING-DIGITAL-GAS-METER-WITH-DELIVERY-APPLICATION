@@ -36,10 +36,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController progressController;
   late Animation<double> tempAnimation;
   late Animation<double> humidityAnimation;
+  late Animation<double> daysLeftAnimation;
 
 
   var sidebarHidden = true;
-  String newvalue = "x";
 
   @override
   void initState() {
@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       double temp = snapshot.value['level'];
       double humidity = snapshot.value['leakage'];
 
+
       isLoading = true;
       _DashboardInit(temp, humidity);
 
@@ -97,6 +98,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       });
 
     humidityAnimation =
+    Tween<double>(begin: 0, end: humid).animate(progressController)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    daysLeftAnimation =
     Tween<double>(begin: 0, end: humid).animate(progressController)
       ..addListener(() {
         setState(() {});
@@ -150,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     height: 2.5,
                   ),
                   Expanded(
-                    child:  MyDashboard(isLoading: isLoading, tempAnimation: tempAnimation, humidityAnimation: humidityAnimation),
+                    child:  MyDashboard(isLoading: isLoading, tempAnimation: tempAnimation, humidityAnimation: humidityAnimation, daysLeftAnimation: daysLeftAnimation,),
                   ),
                   StatsWidget(),
                   const SizedBox(
